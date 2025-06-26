@@ -1,0 +1,286 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #1a1a1a; /* Dark background */
+    background-image: url('data:image/svg+xml,%3Csvg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%232a2a2a" fill-opacity="0.4" fill-rule="evenodd"%3E%3Cpath d="M0 0h3v3H0V0zm3 3h3v3H3V3z"/%3E%3C/g%3E%3C/svg%3E'); /* Subtle pattern */
+    color: #e0e0e0; /* Light grey text */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #2a2a2a; /* Darker background for container */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    position: relative; /* For loading overlay */
+    border: 1px solid #3a3a3a; /* Subtle border */
+}
+
+h1 {
+    text-align: center;
+    color: #f7931a; /* Bitcoin orange */
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5); /* Stronger text shadow */
+}
+
+.card {
+    background-color: #3a3a3a; /* Darker card background */
+    border: 1px solid #4a4a4a; /* Darker border */
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.input-section .input-group {
+    margin-bottom: 15px;
+}
+
+.input-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #c0c0c0; /* Lighter label text */
+}
+
+.input-section input[type="text"],
+.input-section input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #555; /* Darker input border */
+    background-color: #4a4a4a; /* Dark input background */
+    color: #e0e0e0; /* Light input text */
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-section input[type="text"]:focus,
+.input-section input[type="number"]:focus {
+    border-color: #f7931a; /* Bitcoin orange focus */
+    box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.5); /* Stronger focus shadow */
+    outline: none;
+}
+
+.input-section button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #f7931a; /* Bitcoin orange */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
+}
+
+.input-section button:hover {
+    background-color: #e68a17; /* Darker orange on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.results-section h2,
+.error-section h2 {
+    color: #f7931a; /* Bitcoin orange */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.results-section p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.results-section p strong {
+    color: #e0e0e0; /* Lighter strong text */
+}
+
+.fee-estimates p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #555;
+}
+
+.fee-estimates p:last-child {
+    border-bottom: none;
+}
+
+.error-card {
+    background-color: #4a2a2a; /* Darker red background */
+    border-color: #6a3a3a; /* Darker red border */
+    color: #ff9999; /* Lighter red text */
+}
+
+.error-card h2 {
+    color: #ff6666; /* Lighter red heading */
+}
+
+/* Emojis and color indicators */
+.green-emoji { color: #4CAF50; }
+.yellow-emoji { color: #FFC107; }
+.red-emoji { color: #F44336; }
+
+/* Spiciness messages */
+.spicy-message {
+    font-weight: 500;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #4a2a00, #6a3a00); /* Spicy gradient */
+    border: 1px solid #f7931a; /* Bitcoin orange border */
+    color: #fff; /* White text */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+}
+
+.spicy-message.high-utxo {
+    background: linear-gradient(45deg, #6a0000, #8a0000); /* More intense red gradient */
+    border-color: #dc3545;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.spinner {
+    border: 6px solid #555; /* Darker spinner base */
+    border-top: 6px solid #f7931a; /* Bitcoin orange */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Checkbox group for better alignment */
+.input-group.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    width: auto;
+}
+
+/* Chart specific styles */
+.chart-section .chart-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.chart-section .chart-options .input-group.checkbox-group {
+    margin-bottom: 0;
+}
+
+.chart-section .chart-options p {
+    margin: 0;
+    font-size: 14px;
+    color: #c0c0c0;
+}
+
+.chart-section .chart-options .highlight-value {
+    font-weight: bold;
+    color: #F44336;
+}
+
+/* ASU Explanation styles */
+.asu-explanation {
+    background-color: #4a4a4a;
+    border-left: 4px solid #f7931a;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    color: #e0e0e0;
+}
+
+.asu-explanation h4 {
+    color: #f7931a;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.asu-explanation ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 0;
+}
+
+.asu-explanation ul li {
+    margin-bottom: 5px;
+}
+
+.asu-explanation code {
+    background-color: #5a5a5a;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Roboto Mono', monospace;
+    color: #f7931a;
+}
+
+/* Link styling */
+a {
+    color: #f7931a; /* Bitcoin orange for links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #e68a17; /* Darker orange on hover */
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    .input-section input[type="text"],
+    .input-section input[type="number"],
+    .input-section button {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTXO Spiciness Index</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>UTXO Spiciness Index</h1>
+        <p class="lead">Measure the 'spiciness' of your Bitcoin UTXOs and estimate consolidation fees.</p>
+        <p>This tool helps you understand the cost implications of consolidating your Bitcoin Unspent Transaction
+            Outputs (UTXOs). A higher 'spiciness' indicates a more complex or potentially expensive consolidation
+            transaction, especially in high-fee environments. Enter your Bitcoin address below to get started!</p>
+
+        <p>
+        <details>
+            <summary><strong>Arbitrary Spicy Units (ASU):</strong> What does it mean?</summary>
+            <div class="asu-explanation">
+                <p>The Arbitrary Spiciness Unit (ASU) is designed to give you a quick, relative measure of how
+                    "expensive" or "complex" it might be to consolidate your Bitcoin UTXOs.</p>
+                <h4>How it's calculated:</h4>
+                <p><code>ASU = (Number of UTXOs × Estimated Transaction Size in vB × Current Fastest Fee Rate in sat/vB) / 100,000</code>
+                </p>
+                <p>This formula considers:</p>
+                <ul>
+                    <li><strong>Number of UTXOs:</strong> More UTXOs mean more transaction inputs, increasing size and
+                        fees.</li>
+                    <li><strong>Estimated Transaction Size (vB):</strong> Larger transactions cost more for a given fee
+                        rate.</li>
+                    <li><strong>Current Fastest Fee Rate (sat/vB):</strong> Higher network demand means higher fees per
+                        byte.</li>
+                </ul>
+                <p>The <code>100,000</code> is a scaling factor for readability. Essentially, ASU represents the scaled
+                    estimated cost of consolidation at the current fastest network fee rate.</p>
+                <h4>What the values mean:</h4>
+                <ul>
+                    <li><strong>ASU < 1 (Good 👍):</strong> Consolidating your UTXOs would be very inexpensive. This is typically when you have a very small number of UTXOs and/or very low network fee rates.</li>
+                    <li><strong>ASU < 10 (Mild 🌶️):</strong> Consolidating your UTXOs would be relatively inexpensive. This is usually the case when you have a small number of UTXOs, simple address types, and/or low current network fee rates.</li>
+                    <li><strong>ASU < 100 (Medium 🌶️🌶️):</strong> The cost of consolidating your UTXOs is moderate. This might be due to a moderate number of UTXOs or slightly elevated network fees.</li>
+                    <li><strong>ASU < 500 (Hot 🌶️🌶️🌶️):</strong> Consolidating your UTXOs would incur a significant cost. This often happens with a larger number of UTXOs, complex address types, or high current network fee rates.</li>
+                    <li><strong>ASU < 1000 (Fiery 🔥):</strong> The cost is very high, indicating a substantial number of UTXOs and/or very high network congestion.</li>
+                    <li><strong>ASU >= 1000 (Volcanic 🔥🔥🔥):</strong> Consolidating your UTXOs would be extremely expensive, likely due to an exceptionally large number of UTXOs or extremely high network fees. In such cases, it can become prohibitively costly.</li>
+                </ul>
+            </div>
+        </details>
+        </p>
+
+        <p><strong>Important Note:</strong> This tool is designed for simple use cases where you have sent bitcoin
+            repeatedly to the same address (often called "stacking sats"). If you have sent to a different address each
+            time (as you should for privacy), you will get a better idea of your UTXO situation using a dedicated wallet
+            like <a href="https://sparrowwallet.com/" target="_blank">Sparrow Wallet</a>.</p>
+
+        <div class="input-section card">
+            <div class="input-group">
+                <label for="bitcoinAddress">Bitcoin Address:</label>
+                <input type="text" id="bitcoinAddress" placeholder="e.g., bc1q... or 3...">
+            </div>
+            <div class="input-group">
+                <label for="multisigM">Multisig M (optional): <small>(Required signatures)</small></label>
+                <input type="number" id="multisigM" placeholder="e.g., 2">
+            </div>
+            <div class="input-group">
+                <label for="multisigN">Multisig N (optional): <small>(Total keys)</small></label>
+                <input type="number" id="multisigN" placeholder="e.g., 3">
+            </div>
+            <button id="estimateFeesBtn">Estimate Fees</button>
+        </div>
+
+        <div id="resultsSection" class="results-section" style="display: none;">
+            <div class="card">
+                <h2>Spiciness Index Results</h2>
+                <p><strong>Address:</strong> <span id="displayAddress"></span></p>
+                <p><strong>Type:</strong> <span id="displayAddressType"></span></p>
+                <p id="multisigStatus"></p>
+                <p><strong>UTXOs:</strong> <span id="displayUtxos"></span> 📦</p>
+                <p><strong>Total Balance:</strong> <span id="displayTotalBalance"></span> sats 💰</p>
+                <p><strong>Estimated Transaction Size:</strong> <span id="displayEstimatedSize"></span> vB <span
+                        id="sizeEmoji"></span></p>
+                <p id="feeEstimationNote"></p>
+                <div id="spicinessMessage" class="spicy-message" style="display: none;"></div>
+                <p><strong>Arbitrary Spicy Units (ASU):</strong> <span id="displayAsu"></span> <span
+                        id="asuRating"></span></p>
+
+            </div>
+
+            <div class="card chart-section">
+                <h2>Fee vs. Sat/vB Chart</h2>
+                <div class="chart-options">
+                    <div class="input-group checkbox-group">
+                        <input type="checkbox" id="scaleXAxisToggle">
+                        <label for="scaleXAxisToggle">Show fee level that will make me run out of money</label>
+                    </div>
+                    <p id="runOutOfMoneyFeeLevel" style="display: none;">Fee exceeds balance at: <span
+                            class="highlight-value"></span> sat/vB</p>
+                </div>
+                <canvas id="feeChart"></canvas>
+            </div>
+        </div>
+
+        <div id="errorSection" class="error-section" style="display: none;">
+            <div class="card error-card">
+                <h2>Error</h2>
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
