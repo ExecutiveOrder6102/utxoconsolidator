@@ -1,0 +1,8 @@
+{
+  "name": "utxospicinessindex",
+  "version": "1.0.0",
+  "description": "UTXO Spiciness Index",
+  "scripts": {
+    "test": "node test/test.js"
+  }
+}
