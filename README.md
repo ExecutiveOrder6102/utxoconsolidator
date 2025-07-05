@@ -1,6 +1,6 @@
 # UTXO Spiciness Index (Web App)
 
-This is a static web application that helps you measure the 'spiciness' of your Bitcoin UTXOs and estimate consolidation fees. It fetches real-time data from Blockstream, mempool.space, and CoinGecko to provide accurate fee estimations in both satoshis and USD.
+This is a static web application that helps you measure the 'spiciness' of your Bitcoin UTXOs and estimate consolidation fees. All data is fetched from the mempool.space API, so the application can easily point to your own self-hosted instance.
 
 The goal of this tool is to illustrate how stacking lots of small UTXOs on-chain can impact your transaction fees, especially in a high-fee environment, and to give you a fun 'Arbitrary Spicy Unit' (ASU) score. For more details, you can refer to [this article on UTXOs](https://www.discreetlog.com/utxos/).
 
@@ -8,9 +8,9 @@ This tool is for simple use cases where you have sent bitcoin repeatedly to the 
 
 ## Features
 
--   **UTXO Fetching:** Retrieves all UTXOs for a specified Bitcoin address.
+-   **UTXO Fetching:** Retrieves all UTXOs for a specified Bitcoin address via the mempool.space API.
 -   **Real-time Fee Rates:** Fetches current recommended fee rates from mempool.space.
--   **BTC Price:** Obtains the current Bitcoin price in USD for fee conversion.
+-   **BTC Price:** Obtains the current Bitcoin price in USD from mempool.space for fee conversion.
 -   **Transaction Size Estimation:** Estimates the virtual byte (vB) size of a consolidation transaction, considering:
     -   Standard P2PKH, P2SH, Bech32 (P2WPKH), P2WSH, and Taproot address types.
     -   Automatic detection of M-of-N multisig configurations for P2SH and P2WSH addresses based on on-chain data.
@@ -21,6 +21,8 @@ This tool is for simple use cases where you have sent bitcoin repeatedly to the 
 -   **Interactive Fee Chart:** Visualizes the estimated transaction fee in USD across a range of sat/vB rates (up to 5000 sat/vB by default). It also displays the total value of the address and highlights the point where the transaction fee would exceed the address's total value.
 -   **Dynamic X-axis Scaling for Chart:** A toggle allows you to automatically scale the chart's X-axis (sat/vB) to show the fee rate at which the transaction fee would consume the entire balance of the address. This critical fee level is also displayed numerically.
 -   **User-Friendly Interface:** Presents a clear summary of UTXOs, total balance, estimated transaction size, and fee breakdowns with color-coded indicators, all within an intuitive web interface.
+
+All API calls use `mempool.space` by default. If you self-host the mempool project, update the `MEMPOOL_API_BASE` constant in `script.js` to point to your instance.
 
 ## Arbitrary Spiciness Unit (ASU) Explained
 

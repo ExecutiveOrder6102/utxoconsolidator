@@ -7,6 +7,10 @@ let globalCurrentRate = 0; // Store current rate for chart point
 let globalPredefinedRates = {}; // Store predefined rates for chart points
 let feeChartInstance = null; // To store the Chart.js instance
 
+// Base URL for all API calls. Change this if you are running your own
+// self-hosted instance of mempool.space.
+const MEMPOOL_API_BASE = 'https://mempool.space';
+
 // Helper function to fetch data from an API
 async function fetchData(url) {
     const response = await fetch(url);
@@ -16,28 +20,28 @@ async function fetchData(url) {
     return response.json();
 }
 
-// Fetches the UTXOs for a given Bitcoin address using the Blockstream API.
+// Fetches the UTXOs for a given Bitcoin address using the mempool.space API.
 async function getUtxos(address) {
-    const url = `https://blockstream.info/api/address/${address}/utxo`;
+    const url = `${MEMPOOL_API_BASE}/api/address/${address}/utxo`;
     return await fetchData(url);
 }
 
 // Fetches the current fee rate recommendations from the mempool.space API.
 async function getFeeRates() {
-    const url = "https://mempool.space/api/v1/fees/recommended";
+    const url = `${MEMPOOL_API_BASE}/api/v1/fees/recommended`;
     return await fetchData(url);
 }
 
-// Fetches the current price of Bitcoin in USD from CoinGecko.
+// Fetches the current price of Bitcoin in USD from mempool.space.
 async function getBtcPriceUsd() {
-    const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+    const url = `${MEMPOOL_API_BASE}/api/v1/prices`;
     const data = await fetchData(url);
-    return data.bitcoin.usd;
+    return data.USD;
 }
 
 // Fetches the address details from the mempool.space API.
 async function getAddressDetails(address) {
-    const url = `https://mempool.space/api/address/${address}/txs`;
+    const url = `${MEMPOOL_API_BASE}/api/address/${address}/txs`;
     return await fetchData(url);
 }
 
