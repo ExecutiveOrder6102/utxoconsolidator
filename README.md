@@ -103,3 +103,12 @@ This interactive chart visualizes the estimated transaction fee in USD across a 
 *   **Toggle "Show fee level that will make me run out of money":** This checkbox dynamically adjusts the chart's X-axis to focus on the critical fee level where the transaction cost equals or exceeds your address's total balance.
 
 *(Note: The displayed values and chart will vary based on real-time data and the specific address analyzed.)*
+## Testing
+
+Unit tests verify the core utility functions used for fee and size calculations. Run them with Node.js:
+
+```bash
+npm test
+```
+
+Tests are executed automatically for pull requests targeting the `main` branch via GitHub Actions.
